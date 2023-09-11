@@ -1,0 +1,14 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "files.exclude": {
+        "out": false // set this to true to hide the "out" folder with the compiled JS files
+    },
+    "search.exclude": {
+        "out": true // set this to false to include "out" folder in search results
+    },
+    // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
+    "typescript.tsc.autoDetect": "off",
+    "python.pythonPath": "/Users/mjavint/anaconda3/envs/v15/bin/python",
+    "odooDebug.odooBinPath": "/Users/mjavint/Workspaces/Repos/odoo/odoo.15.0/odoo-bin",
+    "odooDebug.odooConfPath": "-c /Users/mjavint/Workspaces/Odoo/FCC/confs/fcc.conf"
+}

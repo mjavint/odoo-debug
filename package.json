@@ -1,0 +1,88 @@
+{
+  "name": "odoo-debug",
+  "displayName": "odoo-debug",
+  "description": "Powerful debug for Odoo ERP",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.82.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "extensionDependencies": [
+    "vscode.git",
+    "ms-python.python"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "odoo-debug.debugServer",
+        "title": "Start Debug Server"
+      },
+      {
+        "command": "odoo-debug.startServer",
+        "title": "Start Server"
+      },
+      {
+        "command": "odoo-debug.closeProcessCommand",
+        "title": "Stop Server"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "Bootstrap de Odoo",
+        "properties": {
+          "odoo-debug.odooBinPath": {
+            "type": "string",
+            "default": "odoo-bin",
+            "description": "Bootstrap de Odoo"
+          }
+        }
+      },
+      {
+        "title": "Configuración de los Argumentos Odoo",
+        "properties": {
+          "odoo-debug.odooArgs": {
+            "type": "array",
+            "default": [],
+            "description": "Argumentos para el Servidor Odoo"
+          }
+        }
+      },
+      {
+        "title": "Archivo de Configuración de Odoo",
+        "properties": {
+          "odoo-debug.odooConf": {
+            "type": "string",
+            "default": [],
+            "description": "Archivo de Configuración de Odoo"
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.82.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
+    "eslint": "^8.47.0",
+    "glob": "^10.3.3",
+    "mocha": "^10.2.0",
+    "typescript": "^5.1.6",
+    "@vscode/test-electron": "^2.3.4"
+  }
+}
