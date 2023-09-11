@@ -1,18 +1,23 @@
 {
   "name": "odoo-debug",
-  "displayName": "odoo-debug",
+  "displayName": "Odoo Debug",
   "description": "Powerful debug for Odoo ERP",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.82.0"
   },
   "categories": [
-    "Other"
+    "Debuggers"
   ],
   "activationEvents": [
     "onStartupFinished"
   ],
   "main": "./out/extension.js",
+  "publisher": "Ing. Manuel Vinent Guilarte",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mjavint/odoo-debug.git"
+  },
   "extensionDependencies": [
     "vscode.git",
     "ms-python.python"
