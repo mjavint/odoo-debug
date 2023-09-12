@@ -16,10 +16,10 @@ Powerful run and debug to improve productivity in the Python Framework, Odoo Jav
 
 ## How to install
 
-1. Install the extension from the url https://marketplace.visualstudio.com/items?itemName=mjavint.mjavint-odoo-snippets&ssr=false#overview or from vscode itself.
+<!-- 1. Install the extension from the url https://marketplace.visualstudio.com/items?itemName=mjavint.mjavint-odoo-snippets&ssr=false#overview or from vscode itself. -->
 
 ## Known Issues
 
-You can report an issue through https://github.com/mjavint/odoo-snippets/issues
+You can report an issue through https://github.com/mjavint/odoo-debug/issues
 
 **Enjoy!**

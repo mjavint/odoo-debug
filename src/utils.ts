@@ -30,3 +30,20 @@ export function getIconFileName(fileName: string): string {
       return "odoo_icon.svg"; // Un ícono predeterminado para otras extensiones
   }
 }
+
+export // Función para obtener la nueva configuración (puede ser a través de un cuadro de diálogo, por ejemplo)
+async function getNewOdooConfigPath(): Promise<string | undefined> {
+  const fileUri = await vscode.window.showOpenDialog({
+    canSelectFiles: true,
+    canSelectFolders: false,
+    canSelectMany: false,
+    openLabel: "Select a odoo",
+  });
+
+  if (fileUri && fileUri.length > 0) {
+    // Obtén el path del archivo seleccionado
+    return fileUri[0].fsPath;
+  }
+
+  return undefined;
+}

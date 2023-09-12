@@ -9,7 +9,7 @@ import {
   launchChrome,
 } from "./launchConfiguration";
 import * as launch from "./constants";
-import { getOdooConfiguration } from "./utils";
+import { getNewOdooConfigPath, getOdooConfiguration } from "./utils";
 
 let { odooConfigPath, odooBinPath } = getOdooConfiguration();
 
@@ -79,48 +79,31 @@ function openChrome(cmdName: string, mode: number) {
 export const openFileExplorer = vscode.commands.registerCommand(
   "odoo-debug.openFileExplorer",
   async () => {
-    // Registra un observador para cambios en las configuraciones de usuario y espacio de trabajo
-    vscode.workspace.onDidChangeConfiguration((event) => {
-      if (event.affectsConfiguration("odoo-debug.odooConf")) {
-        // La configuración 'odoo-debug.odooConf' ha cambiado
-        vscode.window.showInformationMessage(
-          "La configuración odoo-debug.odooConf ha cambiado."
-        );
+    const newOdooConfigPath = await getNewOdooConfigPath(); // Función para obtener la nueva configuración
 
-        // Realiza las acciones que necesites en respuesta al cambio
-        // Por ejemplo, puedes actualizar alguna funcionalidad de tu extensión
-        odooConfigPath = vscode.workspace
-          .getConfiguration("odoo-debug")
-          .get("odooConf", "");
-      }
-    });
-    const fileConf = vscode.Uri.file(odooConfigPath);
-    let fileUri: vscode.Uri[] | undefined;
-    if (fileConf.fsPath !== "/" || (fileUri && fileUri.length > 0)) {
-      vscode.window.showTextDocument(fileConf);
-    } else {
-      // Opens a dialog box to select a file
-      fileUri = await vscode.window.showOpenDialog({
-        canSelectFiles: true,
-        canSelectFolders: false,
-        canSelectMany: false,
-        openLabel: "Select a odoo",
-      });
-      // Gets the path of the selected file as a string
-      const filePath: string | undefined = fileUri![0].fsPath;
-      // Use the Configuration API to save custom settings to the user configuration file
+    if (newOdooConfigPath) {
+      // Actualiza la variable global o el lugar donde se almacena la configuración
+      odooConfigPath = newOdooConfigPath;
+      // Actualiza la configuración en el espacio de trabajo
       await vscode.workspace
         .getConfiguration()
         .update(
           "odoo-debug.odooConf",
-          filePath,
+          newOdooConfigPath,
           vscode.ConfigurationTarget.Workspace
         );
 
-      // Show the file path in a message
-      vscode.window.showInformationMessage(
-        `Ruta del archivo seleccionado: ${filePath}`
-      );
+      // Realiza las acciones que necesites con la nueva configuración
+      // Por ejemplo, puedes actualizar alguna funcionalidad de tu extensión
+      // ...
+    }
+
+    // Abre el archivo con la nueva configuración
+    if (odooConfigPath) {
+      const fileConf = vscode.Uri.file(odooConfigPath);
+      if (fileConf.fsPath !== "/") {
+        vscode.window.showTextDocument(fileConf);
+      }
     }
   }
 );
