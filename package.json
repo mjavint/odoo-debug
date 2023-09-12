@@ -2,7 +2,8 @@
   "name": "odoo-debug",
   "displayName": "Odoo Debug",
   "description": "Powerful debug for Odoo ERP",
-  "version": "0.0.1",
+  "version": "0.0.3",
+  "icon": "resources/odoo.png",
   "engines": {
     "vscode": "^1.82.0"
   },
@@ -13,7 +14,7 @@
     "onStartupFinished"
   ],
   "main": "./out/extension.js",
-  "publisher": "Ing. Manuel Vinent Guilarte",
+  "publisher": "mjavint",
   "repository": {
     "type": "git",
     "url": "https://github.com/mjavint/odoo-debug.git"
@@ -25,46 +26,100 @@
   "contributes": {
     "commands": [
       {
-        "command": "odoo-debug.debugServer",
-        "title": "Start Debug Server"
-      },
-      {
         "command": "odoo-debug.startServer",
-        "title": "Start Server"
+        "title": "Start Server",
+        "icon": "$(run-all)"
       },
       {
-        "command": "odoo-debug.closeProcessCommand",
-        "title": "Stop Server"
+        "command": "odoo-debug.debugServer",
+        "title": "Start Debug Server",
+        "icon": "$(debug-alt)"
+      },
+      {
+        "command": "odoo-debug.openFolderWithAddons",
+        "title": "Abrir Carpeta con Addons",
+        "icon": "$(file-directory)"
+      },
+      {
+        "command": "odoo-debug.openExplorer",
+        "title": "Addons Explorer",
+        "icon": "$(folder-opened)"
+      },
+      {
+        "command": "odoo-debug.openFileExplorer",
+        "title": "Choice configuration file Odoo",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "odoo-debug.debugJS",
+        "title": "Run the browser in JS debug mode and assets",
+        "icon": "$(debug)"
+      },
+      {
+        "command": "odoo-debug.debugOdoo",
+        "title": "Run the browser in debug mode",
+        "icon": "$(code)"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "odooView",
+          "title": "Odoo",
+          "icon": "resources/odoo.svg"
+        }
+      ]
+    },
+    "views": {
+      "odooView": [
+        {
+          "id": "odoo-debug.fileExplorer",
+          "name": "Addons"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "odoo-debug.startServer",
+          "when": "view == odoo-debug.fileExplorer",
+          "group": "navigation"
+        },
+        {
+          "command": "odoo-debug.debugServer",
+          "when": "view == odoo-debug.fileExplorer",
+          "group": "navigation"
+        }
+      ]
+    },
     "configuration": [
       {
-        "title": "Bootstrap de Odoo",
+        "title": "Bootstraping de Odoo",
         "properties": {
           "odoo-debug.odooBinPath": {
             "type": "string",
             "default": "odoo-bin",
-            "description": "Bootstrap de Odoo"
+            "description": "Bootstraping de Odoo"
           }
         }
       },
       {
-        "title": "Configuración de los Argumentos Odoo",
+        "title": "Odoo Arguments",
         "properties": {
           "odoo-debug.odooArgs": {
             "type": "array",
             "default": [],
-            "description": "Argumentos para el Servidor Odoo"
+            "description": "Odoo Arguments"
           }
         }
       },
       {
-        "title": "Archivo de Configuración de Odoo",
+        "title": "Odoo File configuration",
         "properties": {
           "odoo-debug.odooConf": {
             "type": "string",
-            "default": [],
-            "description": "Archivo de Configuración de Odoo"
+            "default": "",
+            "description": "Odoo File configuration"
           }
         }
       }

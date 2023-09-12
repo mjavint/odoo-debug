@@ -1,8 +1,13 @@
 import * as vscode from "vscode";
 import * as cmd from "./commands";
+import { getOdooConfiguration } from "./utils";
+import * as p from "./providers";
+import { FileExplorerProvider } from "./providers";
+
+let { odooBinPath } = getOdooConfiguration();
 
 export function activate(context: vscode.ExtensionContext) {
-  vscode.window.showInformationMessage("Extensión activada");
+  vscode.window.showInformationMessage("Odoo Debug Activated");
 
   // Add a separator button before the first button
   const initSeparator = vscode.window.createStatusBarItem(
@@ -12,30 +17,30 @@ export function activate(context: vscode.ExtensionContext) {
   initSeparator.text = "|";
   initSeparator.show();
 
-  // Create the "Close Process" button in the status bar
+  // Choice configuration file Odoo
   const openFileExplorerButton = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Left
   );
   openFileExplorerButton.text = "$(gear)";
-  openFileExplorerButton.tooltip = "Reiniciar servidor de Odoo";
+  openFileExplorerButton.tooltip = "Choice configuration file Odoo";
   openFileExplorerButton.command = "odoo-debug.openFileExplorer";
   openFileExplorerButton.show();
 
-  // Command to run the JS debug of the Odoo server
+  // Command to Run the browser in JS debug mode and assets
   const debugJSButton = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Left
   );
   debugJSButton.text = "$(debug)";
-  debugJSButton.tooltip = "Ejecutar el servidor de Odoo en modo debug JS";
+  debugJSButton.tooltip = "Run the browser in JS debug mode and assets";
   debugJSButton.command = "odoo-debug.debugJS";
   debugJSButton.show();
 
-  // Command to run debug of the Odoo server
+  // Command to Run the browser in debug mode
   const debugOdoo = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Left
   );
   debugOdoo.text = "$(code)";
-  debugOdoo.tooltip = "Ejecutar el servidor de Odoo en modo desarrollador";
+  debugOdoo.tooltip = "Run the browser in debug mode";
   debugOdoo.command = "odoo-debug.debugOdoo";
   debugOdoo.show();
 
@@ -44,18 +49,27 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.StatusBarAlignment.Left
   );
   debugServerButton.text = "$(debug-alt)";
-  debugServerButton.tooltip = "Ejecutar el servidor de Odoo en modo debug";
+  debugServerButton.tooltip = "Run the Odoo server in debug mode";
   debugServerButton.command = "odoo-debug.debugServer";
   debugServerButton.show();
 
-  // Create the "Close Process" button in the status bar
+  // Command to Run the Odoo server without the debug
   const startServerButton = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Left
   );
   startServerButton.text = "$(run-all)";
-  startServerButton.tooltip = "Ejecutar el servidor de Odoo";
+  startServerButton.tooltip = "Run the Odoo server without the debug";
   startServerButton.command = "odoo-debug.startServer";
   startServerButton.show();
+
+  // Command to Run the Odoo server without the debug
+  const openOdoo = vscode.window.createStatusBarItem(
+    vscode.StatusBarAlignment.Left
+  );
+  openOdoo.text = "$(folder-opened)";
+  openOdoo.tooltip = "Open Odoo folder";
+  openOdoo.command = "odoo-debug.openExplorer";
+  openOdoo.show();
 
   // Add a separator button after the last button
   const finalSeparator = vscode.window.createStatusBarItem(
@@ -65,18 +79,30 @@ export function activate(context: vscode.ExtensionContext) {
   finalSeparator.text = "|";
   finalSeparator.show();
 
-  // Subscribe el comando runOdooCommand
+  // Crea un TreeDataProvider para mostrar la lista de archivos y subdirectorios
+  const fileExplorerProvider = new FileExplorerProvider(
+    `${odooBinPath}/addons`
+  );
+
+  // Registra el TreeDataProvider en la vista del Sidebar Explorer
+  const fileExplorer = vscode.window.registerTreeDataProvider(
+    "odoo-debug.fileExplorer",
+    fileExplorerProvider
+  );
+
+  // Commands General Subscribe
   context.subscriptions.push(
     initSeparator,
     finalSeparator,
-    cmd.openFileExplorer,
     cmd.debugServer,
     cmd.debugJS,
     cmd.debugOdoo,
-    cmd.startServer
+    cmd.startServer,
+    cmd.openFileExplorer,
+    cmd.openExplorer,
+    fileExplorer,
+    cmd.openFile
   );
 }
 
-export function deactivate() {
-  // This method will be called when your extension is disabled
-}
+export function deactivate() {}

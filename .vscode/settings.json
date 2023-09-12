@@ -10,5 +10,6 @@
     "typescript.tsc.autoDetect": "off",
     "python.pythonPath": "/Users/mjavint/anaconda3/envs/v15/bin/python",
     "odooDebug.odooBinPath": "/Users/mjavint/Workspaces/Repos/odoo/odoo.15.0/odoo-bin",
-    "odooDebug.odooConfPath": "-c /Users/mjavint/Workspaces/Odoo/FCC/confs/fcc.conf"
+    "odooDebug.odooConfPath": "-c /Users/mjavint/Workspaces/Odoo/FCC/confs/fcc.conf",
+    "odoo-debug.odooConf": "/Users/mjavint/Workspaces/Odoo/FCC/confs/fcc.conf"
 }

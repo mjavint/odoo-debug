@@ -11,8 +11,8 @@ export const launchDebug: vscode.DebugConfiguration = {
   request: "launch",
   stopOnEntry: false,
   console: "integratedTerminal",
-  python: `${pythonPath}`,
-  program: `${odooBinPath}`,
+  python: pythonPath,
+  program: `${odooBinPath}/odoo-bin`,
   args: `-c ${odooConfigPath} ${odooArgs.join(" ")}`,
 };
 
@@ -22,8 +22,8 @@ export const launchWithoutDebug: vscode.DebugConfiguration = {
   request: "launch",
   stopOnEntry: false,
   console: "integratedTerminal",
-  python: `${pythonPath}`,
-  program: `${odooBinPath}`,
+  python: pythonPath,
+  program: `${odooBinPath}/odoo-bin`,
   args: `-c ${odooConfigPath} ${odooArgs.join(" ")}`,
   noDebug: true,
 };
