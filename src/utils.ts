@@ -31,8 +31,8 @@ export function getIconFileName(fileName: string): string {
   }
 }
 
-export // Función para obtener la nueva configuración (puede ser a través de un cuadro de diálogo, por ejemplo)
-async function getNewOdooConfigPath(): Promise<string | undefined> {
+// Función para obtener la nueva configuración (puede ser a través de un cuadro de diálogo, por ejemplo)
+export async function getNewOdooConfigPath(): Promise<string | undefined> {
   const fileUri = await vscode.window.showOpenDialog({
     canSelectFiles: true,
     canSelectFolders: false,
