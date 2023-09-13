@@ -1,17 +1,17 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
-import { getIconFileName } from "./utils";
+import { getIconFileName, buscarCarpetasAddonsEnLista } from "./utils";
 
 export class FileExplorerProvider implements vscode.TreeDataProvider<FileItem> {
   private excludeExtensions: string[];
   private excludeDirectories: string[];
-  private rootPaths: string[]; // Lista de rutas raíz
+  private rootPaths: string[] = []; // Lista de rutas raíz
 
   constructor(rootPaths: string[]) {
     this.excludeExtensions = [".pyc", ".pyo"];
     this.excludeDirectories = ["__pycache__"];
-    this.rootPaths = rootPaths;
+    this.rootPaths = buscarCarpetasAddonsEnLista(rootPaths);
   }
 
   getTreeItem(element: FileItem): vscode.TreeItem {
@@ -30,26 +30,23 @@ export class FileExplorerProvider implements vscode.TreeDataProvider<FileItem> {
     const currentPath = element.resourceUri.fsPath;
 
     try {
-      const files = await fs.promises.readdir(currentPath);
+      const subdirectories = await this.getAddonSubdirectories(currentPath);
 
       const items: FileItem[] = [];
 
-      for (const file of files) {
-        const filePath = path.join(currentPath, file);
-        const isDirectory = (await fs.promises.stat(filePath)).isDirectory();
+      for (const subdirectory of subdirectories ?? []) {
+        const subdirectoryPath = path.join(currentPath, subdirectory);
+        const isDirectory = (
+          await fs.promises.stat(subdirectoryPath)
+        ).isDirectory();
 
-        // Verifica si la extensión está en la lista de exclusiones
-        const fileExtension = path.extname(file).toLowerCase();
-        const directoryName = path.basename(filePath);
-
-        if (
-          !this.excludeExtensions.includes(fileExtension) &&
-          !this.excludeDirectories.includes(directoryName)
-        ) {
-          items.push(
-            new FileItem(file, isDirectory, vscode.Uri.file(filePath))
-          );
-        }
+        items.push(
+          new FileItem(
+            subdirectory,
+            isDirectory,
+            vscode.Uri.file(subdirectoryPath)
+          )
+        );
       }
 
       return items;
@@ -57,6 +54,41 @@ export class FileExplorerProvider implements vscode.TreeDataProvider<FileItem> {
       vscode.window.showErrorMessage(`Error al obtener elementos: ${err}`);
       return [];
     }
+  }
+
+  addRootPaths(paths: string[]) {
+    // Agrega las rutas que tengan una subcarpeta llamada "addons"
+    for (const path of paths) {
+      if (this.hasAddonSubdirectory(path)) {
+        this.rootPaths.push(path);
+      }
+    }
+  }
+
+  private async getAddonSubdirectories(rootPath: string) {
+    try {
+      const subdirectories = await fs.promises.readdir(rootPath);
+
+      // Filtra solo los subdirectorios que tienen como nombre "addons"
+      return subdirectories.filter(async (subdirectory) => {
+        const subdirectoryPath = path.join(rootPath, subdirectory);
+        const isDirectory = (
+          await fs.promises.stat(subdirectoryPath)
+        ).isDirectory();
+        return isDirectory && subdirectory.toLowerCase() === "addons";
+      });
+    } catch (err) {
+      vscode.window.showErrorMessage(`Error al obtener subdirectorios: ${err}`);
+    }
+  }
+
+  private hasAddonSubdirectory(rootPath: string): boolean {
+    const subdirectories = fs.readdirSync(rootPath);
+
+    // Verifica si hay una subcarpeta llamada "addons"
+    return subdirectories.some((subdirectory) =>
+      subdirectory.toLowerCase().includes("addons")
+    );
   }
 }
 
@@ -67,7 +99,7 @@ export class FileItem extends vscode.TreeItem {
     public readonly resourceUri: vscode.Uri
   ) {
     super(
-      label,
+      label, // Mostrará el nombre de la carpeta en lugar de la ruta completa
       isDirectory
         ? vscode.TreeItemCollapsibleState.Collapsed
         : vscode.TreeItemCollapsibleState.None

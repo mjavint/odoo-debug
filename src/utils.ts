@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import * as path from "path";
+import * as fs from "fs";
 
 export function getOdooConfiguration() {
   const config = vscode.workspace.getConfiguration(
@@ -46,4 +47,44 @@ export async function getNewOdooConfigPath(): Promise<string | undefined> {
   }
 
   return undefined;
+}
+
+export function buscarCarpetasAddonsEnRuta(ruta: string): string[] {
+  let carpetasAddons: string[] = [];
+
+  // Lee el contenido del directorio
+  const archivos = fs.readdirSync(ruta);
+
+  // Itera sobre los archivos y carpetas
+  archivos.forEach((archivo) => {
+    const archivoRuta = path.join(ruta, archivo);
+
+    // Verifica si es un directorio
+    if (fs.statSync(archivoRuta).isDirectory()) {
+      // Si el directorio se llama "addons", agrégalo a la lista
+      if (archivo === "addons") {
+        carpetasAddons.push(archivoRuta);
+      } else {
+        // Si no, realiza una búsqueda recursiva en ese directorio
+        carpetasAddons = carpetasAddons.concat(
+          buscarCarpetasAddonsEnRuta(archivoRuta)
+        );
+      }
+    }
+  });
+
+  return carpetasAddons;
+}
+
+// Función para buscar carpetas "addons" en una lista de rutas
+export function buscarCarpetasAddonsEnLista(rutas: string[]): string[] {
+  let todasLasCarpetasAddons: string[] = [];
+
+  rutas.forEach((ruta) => {
+    const carpetasAddonsEnRuta = buscarCarpetasAddonsEnRuta(ruta);
+    todasLasCarpetasAddons =
+      todasLasCarpetasAddons.concat(carpetasAddonsEnRuta);
+  });
+
+  return todasLasCarpetasAddons;
 }

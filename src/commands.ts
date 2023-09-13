@@ -122,11 +122,10 @@ export const openExplorer = vscode.commands.registerCommand(
     }
 
     // Crea un TreeDataProvider para mostrar la lista de archivos y subdirectorios
-    const rootPaths: string[] = [
-      `${odooBinPath}/addons`,
-      `${odooBinPath}/odoo/addons`,
-      "/Users/mjavint/Workspaces/Odoo/FCC/addons",
-    ];
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    const rootPaths =
+      workspaceFolders?.map((folder) => folder.uri.fsPath) ?? [];
+
     const fileExplorerProvider = new FileExplorerProvider(rootPaths);
 
     // Registra el TreeDataProvider en la vista del Sidebar Explorer
