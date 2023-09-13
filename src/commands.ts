@@ -115,17 +115,19 @@ export const openExplorer = vscode.commands.registerCommand(
   "odoo-debug.openExplorer",
   async () => {
     // Ruta de la carpeta de Odoo configurada por el usuario
-    const odooPath = vscode.workspace
-      .getConfiguration()
-      .get<string>("odoo-debug.odooBinPath");
 
-    if (!odooPath) {
+    if (!odooBinPath) {
       vscode.window.showErrorMessage("La ruta de Odoo no está configurada.");
       return;
     }
 
     // Crea un TreeDataProvider para mostrar la lista de archivos y subdirectorios
-    const fileExplorerProvider = new FileExplorerProvider(`${odooPath}/addons`);
+    const rootPaths: string[] = [
+      `${odooBinPath}/addons`,
+      `${odooBinPath}/odoo/addons`,
+      "/Users/mjavint/Workspaces/Odoo/FCC/addons",
+    ];
+    const fileExplorerProvider = new FileExplorerProvider(rootPaths);
 
     // Registra el TreeDataProvider en la vista del Sidebar Explorer
     vscode.window.registerTreeDataProvider(

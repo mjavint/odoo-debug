@@ -80,15 +80,17 @@ export function activate(context: vscode.ExtensionContext) {
   finalSeparator.show();
 
   // Crea un TreeDataProvider para mostrar la lista de archivos y subdirectorios
-  const fileExplorerProvider = new FileExplorerProvider(
-    `${odooBinPath}/addons`
-  );
+  // const fileExplorerProvider = new FileExplorerProvider(
+  //   [`${odooBinPath}/addons`]
+  // );
+  // const rootPath = [`${odooBinPath}/adddons`, `${odooBinPath}/odoo/adddons`];
+  // const fileExplorerProvider = new FileExplorerProvider(rootPath);
 
   // Registra el TreeDataProvider en la vista del Sidebar Explorer
-  const fileExplorer = vscode.window.registerTreeDataProvider(
-    "odoo-debug.fileExplorer",
-    fileExplorerProvider
-  );
+  // const fileExplorer = vscode.window.registerTreeDataProvider(
+  //   "odoo-debug.fileExplorer",
+  //   fileExplorerProvider
+  // );
 
   // Commands General Subscribe
   context.subscriptions.push(
@@ -100,7 +102,7 @@ export function activate(context: vscode.ExtensionContext) {
     cmd.startServer,
     cmd.openFileExplorer,
     cmd.openExplorer,
-    fileExplorer,
+    // fileExplorer,
     cmd.openFile
   );
 }

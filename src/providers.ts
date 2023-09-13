@@ -6,9 +6,12 @@ import { getIconFileName } from "./utils";
 export class FileExplorerProvider implements vscode.TreeDataProvider<FileItem> {
   private excludeExtensions: string[];
   private excludeDirectories: string[];
-  constructor(private readonly rootPath: string) {
+  private rootPaths: string[]; // Lista de rutas raíz
+
+  constructor(rootPaths: string[]) {
     this.excludeExtensions = [".pyc", ".pyo"];
     this.excludeDirectories = ["__pycache__"];
+    this.rootPaths = rootPaths;
   }
 
   getTreeItem(element: FileItem): vscode.TreeItem {
@@ -16,7 +19,15 @@ export class FileExplorerProvider implements vscode.TreeDataProvider<FileItem> {
   }
 
   async getChildren(element?: FileItem): Promise<FileItem[]> {
-    const currentPath = element ? element.resourceUri.fsPath : this.rootPath;
+    if (!element) {
+      // Si no se proporciona un elemento, devolvemos las rutas raíz como nodos
+      return this.rootPaths.map(
+        (rootPath) => new FileItem(rootPath, true, vscode.Uri.file(rootPath))
+      );
+    }
+
+    // Si se proporciona un elemento, devolvemos los contenidos de la carpeta correspondiente
+    const currentPath = element.resourceUri.fsPath;
 
     try {
       const files = await fs.promises.readdir(currentPath);
